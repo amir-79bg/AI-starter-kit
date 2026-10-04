@@ -6,7 +6,8 @@ KIT="$(cd "$(dirname "$0")/.." && pwd)"
 
 usage() {
   cat <<USAGE
-Usage: bin/new-project.sh <target-dir> [--with <parts>] [--skills <ids>] [--stack <id>]
+Usage: bin/new-project.sh <target-dir>                 step-by-step setup (asks what to install)
+       bin/new-project.sh <target-dir> [--with <parts>] [--skills <ids>] [--stack <id>]
                           [--design-system <id>] [--name <slug>] [--dry-run]
        bin/new-project.sh --list
 
@@ -16,6 +17,7 @@ Usage: bin/new-project.sh <target-dir> [--with <parts>] [--skills <ids>] [--stac
   --design-system   one of design-systems/
   --name            project slug (default: target dir name, lowercased)
   --dry-run         print what would be created; write nothing
+  --interactive     force the step-by-step setup (default in a terminal when nothing is named)
   --list            show parts, skills, stacks and design systems
 
 Nothing is installed unless it is named. Existing files in <target-dir> are never overwritten.
@@ -45,7 +47,7 @@ PARTS
   echo "Design systems (--design-system):"; list_dir design-systems
 }
 
-TARGET="" NAME="" STACK="" DS="" WITH="" SKILLS="" DRY=0
+TARGET="" NAME="" STACK="" DS="" WITH="" SKILLS="" DRY=0 INTERACTIVE=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --list) list_all; exit 0 ;;
@@ -55,6 +57,7 @@ while [ $# -gt 0 ]; do
     --stack) STACK="${2:?}"; shift 2 ;;
     --design-system) DS="${2:?}"; shift 2 ;;
     --dry-run) DRY=1; shift ;;
+    --interactive) INTERACTIVE=1; shift ;;
     -h|--help) usage; exit 0 ;;
     -*) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
     *) [ -z "$TARGET" ] || { usage >&2; exit 1; }; TARGET="$1"; shift ;;
@@ -80,13 +83,90 @@ if [ -n "$DS" ] && { [ "$DS" = "_template" ] || [ ! -d "$KIT/design-systems/$DS"
   echo "Unknown design system: $DS" >&2; list_dir design-systems >&2; exit 1
 fi
 
-# بدون انتخاب، چیزی نصب نمی‌شود؛ فقط گزینه‌ها نشان داده می‌شوند.
+# راه‌اندازی مرحله‌به‌مرحله: هر مرحله یک سؤال، آخرش پیش‌نمایش و تأیید.
+ask() { printf "%s " "$1" >&2; IFS= read -r REPLY || REPLY=""; }
+yes_no() { ask "$1 [y/N]"; case "$REPLY" in y|Y|yes|Yes) return 0 ;; *) return 1 ;; esac; }
+
+# از بین پوشه‌های یک رجیستری یکی را با شماره انتخاب می‌کند؛ 0 یعنی هیچ‌کدام.
+pick_one() {
+  PICKED=""
+  ids="$(for d in "$KIT/$1"/*/; do id="$(basename "$d")"; [ "$id" = "_template" ] || echo "$id"; done)"
+  echo "  0) none" >&2
+  i=0
+  for id in $ids; do
+    i=$((i + 1))
+    printf "  %d) %-22s %s\n" "$i" "$id" "$(head -n 1 "$KIT/$1/$id/README.md" | sed 's/^# *//')" >&2
+  done
+  ask "Number [0]:"
+  i=0
+  for id in $ids; do i=$((i + 1)); [ "$REPLY" = "$i" ] && PICKED="$id"; done
+  return 0
+}
+
+wizard() {
+  echo "Setup for: $TARGET" >&2
+  echo "Nothing is written until you confirm at the end. Enter = no." >&2
+
+  echo >&2; echo "Step 1/5 - Agent layer" >&2
+  yes_no "  graphify: knowledge-graph skill and hooks for Claude Code and Codex?" && WITH="${WITH:+$WITH,}graphify"
+  yes_no "  workflow: AGENTS.md, CLAUDE.md and the 9-step task workflow?" && WITH="${WITH:+$WITH,}workflow"
+  yes_no "  docs: product plan, requirements and security checklist templates?" && WITH="${WITH:+$WITH,}docs"
+  yes_no "  spec: feature-spec, feature-plan and bug-fix skills?" && WITH="${WITH:+$WITH,}spec"
+
+  echo >&2; echo "Step 2/5 - General skills" >&2
+  i=0
+  for d in "$KIT/skills/agents"/*/; do
+    i=$((i + 1))
+    desc="$(awk '/^description:/{sub(/^description: */,""); if ($0 ~ /^[>|]/ || $0 == "") {getline; sub(/^ +/,"")} print; exit}' "$d/SKILL.md" | cut -c1-80)"
+    printf "  %2d) %-22s %s\n" "$i" "$(basename "$d")" "$desc" >&2
+  done
+  ask "Numbers separated by spaces, 'all', or Enter for none:"
+  case "$REPLY" in
+    "") ;;
+    all) WITH="${WITH:+$WITH,}skills" ;;
+    *)
+      for n in $REPLY; do
+        i=0
+        for d in "$KIT/skills/agents"/*/; do
+          i=$((i + 1))
+          [ "$n" = "$i" ] && SKILLS="${SKILLS:+$SKILLS,}$(basename "$d")"
+        done
+      done ;;
+  esac
+
+  echo >&2; echo "Step 3/5 - Stack (boilerplate; skip it on a project that already has code)" >&2
+  pick_one stacks; STACK="$PICKED"
+
+  echo >&2; echo "Step 4/5 - Design system (skip it on a project that already has its own UI)" >&2
+  pick_one design-systems; DS="$PICKED"
+
+  set -- "$TARGET"
+  [ -n "$NAME" ] && set -- "$@" --name "$NAME"
+  [ -n "$WITH" ] && set -- "$@" --with "$WITH"
+  [ -n "$SKILLS" ] && set -- "$@" --skills "$SKILLS"
+  [ -n "$STACK" ] && set -- "$@" --stack "$STACK"
+  [ -n "$DS" ] && set -- "$@" --design-system "$DS"
+  if [ $# -eq 1 ] || { [ $# -eq 3 ] && [ -n "$NAME" ]; }; then
+    echo >&2; echo "Nothing selected, nothing installed." >&2; exit 0
+  fi
+
+  echo >&2; echo "Step 5/5 - Review" >&2
+  echo "Command: bin/new-project.sh $*" >&2
+  "$0" "$@" --dry-run >&2
+  if yes_no "Install this?"; then exec "$0" "$@"; fi
+  echo "Cancelled, nothing installed." >&2; exit 0
+}
+
+# بدون انتخاب: در ترمینال راه‌اندازی مرحله‌به‌مرحله، وگرنه فقط فهرست گزینه‌ها. چیزی نصب نمی‌شود.
 if [ -z "$WITH" ] && [ -z "$STACK" ] && [ -z "$DS" ]; then
+  if [ "$INTERACTIVE" = 1 ] || [ -t 0 ]; then wizard; fi
   {
     echo "Nothing selected, nothing installed."
-    echo "If you are an AI agent: show this list to the user, ask which items they want,"
-    echo "and pass only those. Do not pick for them, and do not add a design system or a"
-    echo "stack to a project that already has its own."
+    echo "If you are an AI agent: ask the user step by step, one question per step -"
+    echo "1) agent-layer parts, 2) which skills, 3) stack, 4) design system - then run the"
+    echo "command with --dry-run, show the result, and install only after they confirm."
+    echo "Do not pick for them, and do not add a design system or a stack to a project"
+    echo "that already has its own."
     echo
     list_all
     echo
