@@ -1,23 +1,25 @@
-# دیزاین سیستم‌ها
+# Design System Registry
 
-دیزاین سیستم اختیاری است و فقط وقتی نصب می‌شود که کاربر خودش بخواهد. هر وقت دیزاین سیستم تازه‌ای در پروژه‌ای استفاده شد، یک ردیف به این جدول و یک پوشه کنار بقیه اضافه می‌شود.
+A design system is optional and is installed only when the user asks for it. Whenever a new design system is used in a project, it gets a row in this table and a folder next to the others.
 
-| شناسه | نام | مناسب برای | سازگار با استک | وضعیت |
+| ID | Name | Suited to | Compatible stacks | Status |
 |---|---|---|---|---|
-| [`dig`](dig/) | دیگ (Dig) | توسعهٔ پنل: پنل مدیریت، داشبورد و پنل کاربری فارسی و راست‌به‌چپ | هر استکی با React و Tailwind 4 | در حال استفاده، از پروژهٔ آکادمی |
+| [`dig`](dig/) | Dig | Panel development: Persian, right-to-left admin panels, dashboards and user panels | Any stack with React and Tailwind CSS 4 | In use; extracted from the Academy project |
 
-## انتخاب در شروع پروژه
+## Selecting one
 
 ```bash
 bin/new-project.sh ../my-app --design-system dig
 ```
 
-بدون `--design-system` هیچ‌کدام نصب نمی‌شود، حتی با `--with all`. ایجنت قبل از نصب از کاربر می‌پرسد و روی پروژه‌ای که رابط کاربری یا دیزاین سیستم خودش را دارد نصب نمی‌کند.
+Without `--design-system` none is installed, not even with `--with all`. An agent asks the user before installing and does not install a design system into a project that already has its own UI or design system.
 
-## اضافه کردن دیزاین سیستم تازه
+Files are copied into the frontend directory declared by the selected stack (`FRONTEND_DIR` in `stack.env`), or into the project root when no stack is selected.
 
-1. پوشهٔ `_template` را با شناسهٔ تازه کپی کن: `cp -R design-systems/_template design-systems/<id>`
-2. `README.md` آن را پر کن: چیست، چطور نصب می‌شود، چه کامپوننت‌هایی دارد.
-3. قانون‌هایی که ایجنت باید هنگام ساخت رابط رعایت کند در `AGENT_RULES.md` بنویس. این فایل به `AGENTS.md` پروژه اضافه می‌شود.
-4. فایل‌هایی که باید عیناً در پوشهٔ فرانت‌اند پروژه بنشینند در `files/` بگذار.
-5. یک ردیف به جدول بالا اضافه کن.
+## Adding a design system
+
+1. Copy the `_template` folder under a new ID: `cp -R design-systems/_template design-systems/<id>`
+2. Fill in its `README.md`: what it is, how it is installed, which components it provides. The first heading is shown by `--list`.
+3. Write the rules an agent must follow when building UI in `AGENT_RULES.md`. This file is appended to the project's `AGENTS.md`.
+4. Put the files that must be copied verbatim into the frontend directory in `files/`.
+5. Add a row to the table above and to the table in the root `README.md`.

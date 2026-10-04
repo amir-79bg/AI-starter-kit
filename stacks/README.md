@@ -1,23 +1,23 @@
-# استک‌های فنی
+# Tech Stacks
 
-اسکلت فنی اختیاری است. هر وقت استک تازه‌ای در پروژه‌ای استفاده شد، یک ردیف به این جدول و یک پوشه کنار بقیه اضافه می‌شود.
+A stack is an optional technical skeleton (boilerplate). Whenever a new stack is used in a project, it gets a row in this table and a folder next to the others.
 
-| شناسه | بک‌اند | فرانت‌اند | زیرساخت | وضعیت |
+| ID | Backend | Frontend | Infrastructure | Status |
 |---|---|---|---|---|
-| [`django-next-docker`](django-next-docker/) | Django 5 + Django Ninja + Celery | Next.js 16 + React 19 + Tailwind 4 | PostgreSQL، Redis، MinIO، Docker Compose | در حال استفاده، از پروژهٔ آکادمی |
+| [`django-next-docker`](django-next-docker/) | Django 5 + Django Ninja + Celery | Next.js 16 + React 19 + Tailwind CSS 4 | PostgreSQL, Redis, MinIO, Docker Compose | In use; extracted from the Academy project |
 
-## انتخاب در شروع پروژه
+## Selecting one
 
 ```bash
 bin/new-project.sh ../my-app --stack django-next-docker
 ```
 
-بدون `--stack` اسکلت فنی نصب نمی‌شود. بخش‌های لایهٔ ایجنت (اسکیل‌ها، graphify، روند کار، داکیومنت‌ها) جدا با `--with` انتخاب می‌شوند.
+Without `--stack` no skeleton is installed. The agent-layer components (skills, graphify, workflow, docs, spec) are selected separately with `--with`.
 
-## اضافه کردن استک تازه
+## Adding a stack
 
-1. پوشهٔ `_template` را با شناسهٔ تازه کپی کن: `cp -R stacks/_template stacks/<id>`
-2. فایل‌های اسکلت را در `files/` بگذار؛ این پوشه عیناً در ریشهٔ پروژه کپی می‌شود. هر جا نام پروژه لازم است `__PROJECT__` بنویس. فایل `.gitignore` را با نام `gitignore` بگذار.
-3. در `stack.env` بنویس پوشهٔ فرانت‌اند کجاست (`FRONTEND_DIR=frontend`)؛ دیزاین سیستم همان‌جا نصب می‌شود.
-4. فرمان‌های اجرا، تست و اعمال تغییر را در `AGENT_RULES.md` بنویس. این فایل به `AGENTS.md` پروژه اضافه می‌شود.
-5. `README.md` را پر کن و یک ردیف به جدول بالا اضافه کن.
+1. Copy the `_template` folder under a new ID: `cp -R stacks/_template stacks/<id>`
+2. Put the skeleton files in `files/`; this folder is copied verbatim into the project root. Write `__PROJECT__` wherever the project name is needed. Name the `.gitignore` file `gitignore`.
+3. Declare the frontend directory in `stack.env` (`FRONTEND_DIR=frontend`); the design system is installed there.
+4. Write the run, test and deploy-to-running-app commands in `AGENT_RULES.md`. This file is appended to the project's `AGENTS.md`.
+5. Fill in `README.md` (the first heading is shown by `--list`) and add a row to the table above and to the table in the root `README.md`.

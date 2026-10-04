@@ -1,17 +1,17 @@
-# <نام استک>
+# <Stack name>
 
-## چه چیزی دارد
+## What it contains
 
-سرویس‌ها و نسخه‌ها.
+Services and versions.
 
-## بعد از ساخت پروژه
+## After creating the project
 
-فرمان‌هایی که یک بار باید اجرا شوند تا پروژه بالا بیاید.
+The commands to run once to bring the project up.
 
-## چه چیزی ندارد
+## What it does not contain
 
-چیزهایی که عمداً در اسکلت نیست و هر پروژه خودش می‌سازد.
+Things deliberately left out of the skeleton for each project to build.
 
-## منبع
+## Source
 
-از کدام پروژه آمده.
+Which project it comes from.

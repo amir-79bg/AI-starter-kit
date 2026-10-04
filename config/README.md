@@ -1,10 +1,12 @@
-# کانفیگ
+# Configuration
 
-| فایل | در پروژه کجا می‌نشیند | چه می‌کند |
-|---|---|---|
-| `claude/settings.json` | `.claude/settings.json` | هوک‌های graphify برای Claude Code: قبل از Bash، Grep، Read و Glob یادآوری می‌کند اول گراف پرسیده شود |
-| `codex/hooks.json` | `.codex/hooks.json` | همان هوک برای Codex |
-| `gitattributes` | `.gitattributes` | merge driver فایل `graphify-out/graph.json` |
-| `gitignore` | به `.gitignore` اضافه می‌شود | `.env`، `.DS_Store` و کش graphify |
+Agent configuration files installed by the `graphify` and `workflow` components.
 
-هوک‌ها به فرمان `graphify` روی سیستم نیاز دارند. اگر نصب نباشد، هوک‌ها را از این دو فایل بردار.
+| File | Installed to | Component | Purpose |
+|---|---|---|---|
+| `claude/settings.json` | `.claude/settings.json` | `graphify` | graphify `PreToolUse` hooks for Claude Code: before Bash, Grep, Read and Glob they remind the agent to query the graph first |
+| `codex/hooks.json` | `.codex/hooks.json` | `graphify` | The same hook for Codex |
+| `gitattributes` | `.gitattributes` | `graphify` | Merge driver for `graphify-out/graph.json` |
+| `gitignore` | appended to `.gitignore` | `graphify`, `workflow` | graphify cache lines with `graphify`; `.env` and `.DS_Store` with `workflow` |
+
+The hooks require the `graphify` command on the `PATH`. If it is not installed, do not select the `graphify` component, or remove the hooks from these two files.

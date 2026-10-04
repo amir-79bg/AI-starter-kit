@@ -1,50 +1,52 @@
-# اسکیل‌ها
+# Agent Skills
 
-| پوشه | در پروژه کجا می‌نشیند | چه چیزی دارد |
-|---|---|---|
-| `agents/` | `.agents/skills/` | اسکیل‌های عمومی |
-| `claude/` | `.claude/skills/` | نسخهٔ Claude Code از graphify |
-| `codex/` | `.codex/skills/` | نسخهٔ Codex از graphify |
-| `spec/` | `.agents/skills/` و `.claude/skills/` | مشخصات فیچر، پلن و رفع باگ؛ با `--with spec` |
+Agent Skills bundled with AI Starter Kit for Claude Code and OpenAI Codex.
 
-دو نسخهٔ graphify را خود graphify برای هر ابزار جدا می‌سازد و محتوایشان فرق دارد؛ برای همین جدا نگه داشته شده‌اند (نسخهٔ 0.9.72).
+| Source folder | Installed to | Contents | Selector |
+|---|---|---|---|
+| `agents/` | `.agents/skills/` | General-purpose skills | `--with skills` or `--skills <ids>` |
+| `spec/` | `.agents/skills/` and `.claude/skills/` | Feature specification, planning and bug-fix skills | `--with spec` |
+| `claude/` | `.claude/skills/` | The Claude Code build of graphify | `--with graphify` |
+| `codex/` | `.codex/skills/` | The Codex build of graphify | `--with graphify` |
 
-## اسکیل‌های عمومی
+graphify generates a separate build of its skill for each tool and the two differ in content, so both are kept (version 0.9.72).
 
-| اسکیل | کاربرد |
+## General skills
+
+| Skill | Purpose |
 |---|---|
-| `frontend-design` | جهت بصری، تایپوگرافی و چیدمان هنگام ساخت رابط |
-| `webapp-testing` | تست و دیباگ اپ وب محلی با Playwright |
-| `web-artifacts-builder` | ساخت آرتیفکت HTML چندکامپوننتی با React و Tailwind |
-| `theme-factory` | تم آماده برای اسلاید، سند و صفحهٔ HTML |
-| `canvas-design` | پوستر و طرح بصری در PNG و PDF |
-| `algorithmic-art` | هنر الگوریتمی با p5.js |
-| `brand-guidelines` | رنگ و تایپوگرافی برند Anthropic |
-| `slack-gif-creator` | GIF متحرک برای Slack |
-| `doc-coauthoring` | روند نوشتن مستندات، پروپوزال و مشخصات فنی |
-| `internal-comms` | نوشتن ارتباطات داخلی سازمان |
-| `claude-api` | مرجع Claude API و SDK |
-| `mcp-builder` | ساخت سرور MCP |
-| `skill-creator` | ساخت، بهبود و ارزیابی اسکیل |
-| `academy-guide` | پیشنهاد دوره و آموزش از Claude Academy |
-| `discernment-nudge` | یادآوری بازبینی بعد از جوابی که کاربر ممکن است روی آن عمل کند |
+| `frontend-design` | Visual direction, typography and layout when building UI |
+| `webapp-testing` | Testing and debugging local web apps with Playwright |
+| `web-artifacts-builder` | Multi-component HTML artifacts with React and Tailwind |
+| `theme-factory` | Ready-made themes for slides, documents and HTML pages |
+| `canvas-design` | Posters and visual designs as PNG and PDF |
+| `algorithmic-art` | Generative art with p5.js |
+| `brand-guidelines` | Anthropic brand colours and typography |
+| `slack-gif-creator` | Animated GIFs for Slack |
+| `doc-coauthoring` | A workflow for writing documentation, proposals and technical specs |
+| `internal-comms` | Internal company communications |
+| `claude-api` | Reference for the Claude API and SDKs |
+| `mcp-builder` | Building MCP servers |
+| `skill-creator` | Creating, improving and evaluating skills |
+| `academy-guide` | Course and training suggestions from Claude Academy |
+| `discernment-nudge` | A review reminder after an answer the user may act on |
 
-## اسکیل‌های مشخصات و باگ
+## Spec-driven skills
 
-| اسکیل | کاربرد |
+| Skill | Purpose |
 |---|---|
-| `feature-spec` | مشخصات فیچر و پرسیدن ابهام‌ها قبل از کد |
-| `feature-plan` | پلن فنی، تسک‌های مرتب، و تطبیق کد با مشخصات |
-| `bug-fix` | رفع باگ در سه مرحله: تشخیص، رفع، تأیید |
+| `feature-spec` | Writes a feature specification and resolves open questions before any code |
+| `feature-plan` | Writes the technical plan and ordered tasks, then checks the code against the specification |
+| `bug-fix` | Fixes a bug in three steps: diagnose, fix, verify |
 
-این سه برای همین کیت نوشته شده‌اند و ایده‌شان از روند [Spec Kit](https://github.com/github/spec-kit) گرفته شده؛ متن یا فایلی از آن کپی نشده است.
+These three were written for this kit. The approach is inspired by [GitHub Spec Kit](https://github.com/github/spec-kit); no text or files were copied from it. Their content is written in Persian.
 
-## مجوز
+## Licensing
 
-اسکیل‌هایی که `LICENSE.txt` دارند با مجوز Apache 2.0 منتشر شده‌اند. `doc-coauthoring` فایل مجوز ندارد.
+Skills that include a `LICENSE.txt` are published under Apache 2.0. `doc-coauthoring` has no licence file.
 
-اسکیل‌های `docx`، `pdf`، `pptx` و `xlsx` در این ریپو نیستند، چون مجوزشان اجازهٔ توزیع نمی‌دهد. این چهار اسکیل از داخل خود Claude در دسترس‌اند. قبل از اضافه کردن هر اسکیل تازه، مجوزش را بخوان.
+The `docx`, `pdf`, `pptx` and `xlsx` skills are not in this repository because their licence does not permit redistribution; they are available from within Claude itself. Read the licence of any skill before adding it.
 
-## اضافه کردن اسکیل تازه
+## Adding a skill
 
-پوشهٔ اسکیل (با `SKILL.md`) را در `agents/` بگذار و یک ردیف به جدول بالا اضافه کن. برای ساختن اسکیل از صفر، `skill-creator` را به کار بگیر.
+Put the skill folder (with its `SKILL.md`) in `agents/` and add a row to the table above. To write a skill from scratch, use `skill-creator`.

@@ -1,154 +1,253 @@
-# AI Starter Kit: قالب شروع پروژه با Claude Code و Codex
+# AI Starter Kit: Project Scaffolding for Claude Code and OpenAI Codex
 
-**AI Starter Kit** is a project template for AI-assisted development with **Claude Code** and **OpenAI Codex**. It bundles agent skills, an `AGENTS.md` / `CLAUDE.md` template, a step-by-step task workflow, hooks, documentation templates, a design-system registry (RTL / Persian admin panels) and an optional **Django + Next.js + Docker** boilerplate. One script scaffolds a new project from the parts you pick; nothing is installed unless it is named.
+**AI Starter Kit** is an opt-in project scaffold for AI-assisted software development with **Claude Code** and **OpenAI Codex**. A single Bash installer adds the pieces you choose to a new or existing repository: agent skills, an `AGENTS.md` / `CLAUDE.md` rule set, a nine-step task workflow, spec-driven feature and bug-fix skills, knowledge-graph hooks, documentation templates, a **Django + Next.js + Docker** boilerplate, and an RTL design system for admin panels.
 
-استارتر کیت هوش مصنوعی یک قالب آماده برای شروع پروژه با ایجنت‌های کدنویسی است. به‌جای اینکه در هر پروژه اسکیل‌ها، قانون‌های ایجنت، داکیومنت‌ها و دیزاین سیستم را از صفر بچینی، یک فرمان هر بخشی را که انتخاب کنی در پروژه می‌گذارد.
+Nothing is installed by default. Every component is selected explicitly, previewed with a dry run, and written without overwriting a single existing file.
 
-## فهرست
+## Table of contents
 
-- [چه چیزی در این قالب هست](#چه-چیزی-در-این-قالب-هست)
-- [شروع سریع](#شروع-سریع)
-- [اگر ایجنت نصب می‌کند](#اگر-ایجنت-نصب-می‌کند)
-- [روند انجام تسک برای ایجنت](#روند-انجام-تسک-برای-ایجنت)
-- [مشخصات فیچر و رفع باگ](#مشخصات-فیچر-و-رفع-باگ)
-- [دیزاین سیستم برای توسعهٔ پنل](#دیزاین-سیستم-برای-توسعهٔ-پنل)
-- [استک فنی: Django + Next.js + Docker](#استک-فنی-django--nextjs--docker)
-- [اضافه کردن اسکیل، دیزاین سیستم یا استک تازه](#اضافه-کردن-اسکیل-دیزاین-سیستم-یا-استک-تازه)
-- [پیش‌نیاز](#پیش‌نیاز)
+- [Why use it](#why-use-it)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Quick start](#quick-start)
+- [Interactive setup](#interactive-setup)
+- [Command-line reference](#command-line-reference)
+- [Agent-driven installation](#agent-driven-installation)
+- [What gets installed](#what-gets-installed)
+- [Agent task workflow](#agent-task-workflow)
+- [Spec-driven development and bug fixing](#spec-driven-development-and-bug-fixing)
+- [Agent skills](#agent-skills)
+- [Tech stack: Django + Next.js + Docker](#tech-stack-django--nextjs--docker)
+- [Design system registry](#design-system-registry)
+- [Safety guarantees](#safety-guarantees)
+- [Extending the kit](#extending-the-kit)
+- [Repository layout](#repository-layout)
+- [Language of the installed content](#language-of-the-installed-content)
+- [Licensing](#licensing)
 
-## چه چیزی در این قالب هست
+## Why use it
 
-| پوشه | چیست |
-|---|---|
-| [`skills/`](skills/) | ۱۵ اسکیل ایجنت (Agent Skills) برای طراحی رابط، تست اپ وب، ساخت آرتیفکت و تم، نوشتن مستندات، ساخت سرور MCP و کار با Claude API، به‌علاوهٔ اسکیل graphify برای گراف دانش کد |
-| [`workflow/`](workflow/) | روند انجام تسک در ۹ مرحله و قالب `AGENTS.md` |
-| [`config/`](config/) | تنظیمات و هوک‌های Claude Code (`.claude/settings.json`) و Codex (`.codex/hooks.json`) |
-| [`docs-templates/`](docs-templates/) | قالب پلن محصول، سند نیازمندی‌ها و معماری، چک‌لیست امنیت قبل از انتشار و README |
-| [`design-systems/`](design-systems/) | فهرست دیزاین سیستم‌ها؛ اختیاری، فقط وقتی کاربر خودش بخواهد |
-| [`stacks/`](stacks/) | فهرست استک‌های فنی (boilerplate)؛ اختیاری |
-| [`bin/new-project.sh`](bin/new-project.sh) | اسکریپت ساخت پروژهٔ تازه |
+Coding agents produce better results when a repository tells them how to work: which rules apply, how a task moves from request to verified change, where the specification lives, and which skills are available. Setting that up by hand for every project is repetitive, and installers that copy everything at once leave a repository full of files nobody asked for.
 
-## شروع سریع
+AI Starter Kit keeps the agent setup in one place and installs it selectively:
+
+- **Opt-in by design.** The installer does nothing until a component is named or confirmed.
+- **Safe on existing projects.** Existing files are skipped, never overwritten or merged.
+- **Agent-agnostic layout.** Skills are placed where both Claude Code (`.claude/skills/`) and Codex (`.agents/skills/`, `.codex/`) discover them.
+- **Process, not only files.** A task workflow, feature specifications and a bug-fix procedure give the agent a repeatable path from request to verified result.
+
+## Features
+
+| Component | Selector | Summary |
+|---|---|---|
+| General agent skills | `--with skills` or `--skills <ids>` | 15 Agent Skills for UI design, web app testing, MCP servers, the Claude API, documentation and more |
+| Knowledge-graph tooling | `--with graphify` | The graphify skill for Claude Code and Codex, `PreToolUse` hooks, and a merge driver entry for the graph file |
+| Task workflow | `--with workflow` | `AGENTS.md`, `CLAUDE.md` and a nine-step task workflow |
+| Documentation templates | `--with docs` | Product plan, requirements and architecture, security release checklist, project README |
+| Spec-driven skills | `--with spec` | `feature-spec`, `feature-plan` and `bug-fix` |
+| Tech stack boilerplate | `--stack <id>` | Django 5 + Django Ninja + Celery, Next.js 16 + React 19, PostgreSQL, Redis, MinIO, Docker Compose |
+| Design system | `--design-system <id>` | Dig: an RTL, Persian-first component system on React and Tailwind CSS 4 |
+
+## Requirements
+
+- macOS or Linux with Bash 3.2 or later.
+- Git.
+- [graphify](skills/claude/graphify/SKILL.md) on the `PATH`, only if you install the `graphify` component; its hooks call the `graphify` command.
+- Docker and Node.js 20, only if you install a stack or a design system.
+
+## Quick start
 
 ```bash
 git clone https://github.com/amir-79bg/AI-starter-kit.git
 cd AI-starter-kit
 
-bin/new-project.sh ../my-app                                 # راه‌اندازی مرحله‌به‌مرحله؛ می‌پرسد چه چیزی نصب شود
-bin/new-project.sh --list                                    # بخش‌ها، اسکیل‌ها، استک‌ها و دیزاین سیستم‌ها
-bin/new-project.sh ../my-app --with graphify,workflow --dry-run   # فقط نشان می‌دهد چه چیزی ساخته می‌شود
-bin/new-project.sh ../my-app --with graphify,workflow --skills webapp-testing,frontend-design
+bin/new-project.sh ../my-app            # interactive setup: asks what to install
+```
+
+Non-interactive equivalents:
+
+```bash
+bin/new-project.sh --list                                         # every selectable component
+bin/new-project.sh ../my-app --with graphify,workflow --dry-run   # preview, write nothing
+bin/new-project.sh ../my-app --with graphify,workflow,spec --skills webapp-testing,frontend-design
 bin/new-project.sh ../my-app --with all --stack django-next-docker
 ```
 
-هیچ چیزی پیش‌فرض نصب نمی‌شود. بدون گزینه، اسکریپت در ترمینال راه‌اندازی پنج‌مرحله‌ای را شروع می‌کند: لایهٔ ایجنت، اسکیل‌ها، استک، دیزاین سیستم، و آخر پیش‌نمایش و تأیید. تا قبل از تأیید چیزی نوشته نمی‌شود. اگر ترمینال تعاملی نباشد (مثلاً وقتی ایجنت اجرا می‌کند)، فقط فهرست گزینه‌ها چاپ می‌شود.
+The target directory may be empty, missing, or an existing project.
 
-اگر می‌دانی چه می‌خواهی، همان انتخاب‌ها را مستقیم با گزینه بده:
+## Interactive setup
 
-| گزینه | چه چیزی نصب می‌کند |
+Running the installer in a terminal with only a target directory starts a five-step setup. Each answer defaults to "no", and nothing is written before the final confirmation.
+
+| Step | Question |
 |---|---|
-| `--with skills` | همهٔ اسکیل‌های عمومی در `.agents/skills/` |
-| `--skills a,b` | فقط اسکیل‌های نام‌برده، به‌جای همه |
-| `--with graphify` | اسکیل graphify، هوک‌های Claude Code و Codex، `.gitattributes` |
-| `--with workflow` | `AGENTS.md`، `CLAUDE.md`، `docs/TASK_WORKFLOW.md` و خط‌های پایهٔ `.gitignore` |
-| `--with docs` | قالب پلن محصول، نیازمندی‌ها و معماری، چک‌لیست امنیت و README |
-| `--with spec` | اسکیل‌های `feature-spec`، `feature-plan` و `bug-fix` در `.agents/skills/` و `.claude/skills/` |
-| `--with all` | پنج بخش بالا؛ استک و دیزاین سیستم را شامل نمی‌شود |
-| `--stack <id>` | اسکلت فنی |
-| `--design-system <id>` | دیزاین سیستم |
-| `--dry-run` | چیزی نمی‌نویسد؛ فقط فهرست فایل‌هایی که ساخته می‌شوند |
+| 1. Agent layer | Yes/no for each of `graphify`, `workflow`, `docs`, `spec` |
+| 2. General skills | A numbered list with descriptions; enter numbers, `all`, or nothing |
+| 3. Stack | Pick a boilerplate by number, or `0` for none |
+| 4. Design system | Pick a design system by number, or `0` for none |
+| 5. Review | Shows the equivalent command and the dry-run file list, then asks for confirmation |
 
-اسکریپت روی پروژهٔ موجود هم اجرا می‌شود و هیچ فایلی را بازنویسی نمی‌کند. اگر `AGENTS.md` از قبل باشد، قانون‌های استک و دیزاین سیستم به آن اضافه نمی‌شوند و اسکریپت مسیرشان را می‌گوید تا دستی اضافه شوند.
+Use `--interactive` to force the setup when standard input is not a terminal.
 
-## اگر ایجنت نصب می‌کند
+## Command-line reference
 
-این بخش برای Claude Code، Codex و هر ایجنت دیگری است که این کیت را روی پروژه‌ای نصب می‌کند.
+```text
+bin/new-project.sh <target-dir>
+bin/new-project.sh <target-dir> [--with <parts>] [--skills <ids>] [--stack <id>]
+                   [--design-system <id>] [--name <slug>] [--dry-run]
+bin/new-project.sh --list
+```
 
-ایجنت ترمینال تعاملی ندارد، پس همان مرحله‌های راه‌اندازی را خودش از کاربر می‌پرسد: هر مرحله یک سؤال، با گزینه‌هایی که از `bin/new-project.sh --list` می‌آید. اگر ابزار پرسش چندگزینه‌ای داری، از همان استفاده کن.
+| Option | Effect |
+|---|---|
+| `--with <parts>` | Comma-separated components: `skills`, `graphify`, `workflow`, `docs`, `spec`, or `all` |
+| `--skills <ids>` | Install only the named general skills instead of all of them |
+| `--stack <id>` | Install a boilerplate from [`stacks/`](stacks/) |
+| `--design-system <id>` | Install a design system from [`design-systems/`](design-systems/) |
+| `--name <slug>` | Project name substituted for `__PROJECT__`; defaults to the target directory name |
+| `--dry-run` | Print every file that would be created; write nothing |
+| `--interactive` | Force the step-by-step setup |
+| `--list` | List components, skills, stacks and design systems |
 
-1. **لایهٔ ایجنت:** کدام‌یک از `graphify`، `workflow`، `docs` و `spec`؟ برای هر کدام یک خط بگو چه چیزی در پروژه می‌گذارد.
-2. **اسکیل‌های عمومی:** هیچ‌کدام، همه، یا کدام‌ها؟ فهرست را با کاربرد هر اسکیل نشان بده.
-3. **استک:** می‌خواهد یا نه. روی پروژه‌ای که کد دارد پیشنهادش نکن.
-4. **دیزاین سیستم:** می‌خواهد یا نه. روی پروژه‌ای که رابط کاربری یا دیزاین سیستم خودش را دارد نصب نکن.
-5. **مرور و تأیید:** فرمان را با `--dry-run` اجرا کن، خروجی را نشان بده، و فقط بعد از تأیید کاربر بدون `--dry-run` اجرا کن.
+`--with all` selects the five agent-layer components. It never includes a stack or a design system; those are installed only when named.
 
-خودت به‌جای کاربر انتخاب نکن و `--with all` را بدون اینکه خودش گفته باشد نزن. بعد از نصب، فایل‌های موجود پروژه را به‌خاطر کیت تغییر نده؛ اگر چیزی باید دستی اضافه شود، به کاربر بگو.
+Without any selection and without a terminal, the installer prints the available options, exits with status `2`, and leaves the target untouched.
 
-ساختاری که با همهٔ بخش‌ها در پروژه ساخته می‌شود (اول هر خط نام بخش آمده):
+## Agent-driven installation
+
+This section is for Claude Code, Codex and any other agent asked to install the kit into a project. An agent has no interactive terminal, so it asks the user the same questions itself, one step at a time, using the options from `bin/new-project.sh --list`. Use a multiple-choice question tool if one is available.
+
+1. **Agent layer:** which of `graphify`, `workflow`, `docs` and `spec`? State in one line what each adds to the project.
+2. **General skills:** none, all, or a specific set? Show the list with the purpose of each skill.
+3. **Stack:** wanted or not. Do not suggest it for a project that already contains code.
+4. **Design system:** wanted or not. Do not install it into a project that already has its own UI or design system.
+5. **Review and confirm:** run the command with `--dry-run`, show the output, and run it without `--dry-run` only after the user confirms.
+
+Do not choose on the user's behalf, and do not pass `--with all` unless the user asked for everything. After installing, do not modify the project's existing files on account of the kit; if something has to be added by hand, tell the user.
+
+## What gets installed
+
+Paths are relative to the target directory. The label before each description is the component that creates it.
 
 ```
 my-app/
-├── AGENTS.md              workflow: روند کار + قانون‌های استک و دیزاین سیستم انتخاب‌شده
-├── CLAUDE.md              workflow: به AGENTS.md اشاره می‌کند
-├── .agents/skills/        skills: اسکیل‌های عمومی
-├── .claude/               graphify: اسکیل graphify و هوک‌های Claude Code؛ spec: اسکیل‌های مشخصات و باگ
-├── .codex/                graphify: اسکیل graphify و هوک‌های Codex
-├── docs/                  workflow و docs: روند تسک، پلن محصول، نیازمندی‌ها و معماری، چک‌لیست امنیت
-└── ...                    فایل‌های استک و دیزاین سیستم، اگر انتخاب شده باشند
+├── AGENTS.md              workflow: task rules, plus the rules of the selected stack and design system
+├── CLAUDE.md              workflow: a one-line import of AGENTS.md
+├── .agents/skills/        skills, spec: general skills and the spec-driven skills
+├── .claude/
+│   ├── settings.json      graphify: PreToolUse hooks for Claude Code
+│   └── skills/            graphify, spec: skills discovered by Claude Code
+├── .codex/
+│   ├── hooks.json         graphify: PreToolUse hook for Codex
+│   └── skills/            graphify: the Codex build of the graphify skill
+├── .gitattributes         graphify: merge driver for graphify-out/graph.json
+├── .gitignore             workflow, graphify: missing lines are appended
+├── README.md              docs: project README template
+├── docs/
+│   ├── TASK_WORKFLOW.md                 workflow
+│   ├── PRODUCT_PLAN.md                  docs
+│   ├── REQUIREMENTS_ARCHITECTURE.md     docs
+│   └── SECURITY_RELEASE_CHECKLIST.md    docs
+└── ...                    files of the selected stack and design system
 ```
 
-مرحله‌های بعدیِ مخصوص هر استک و دیزاین سیستم در `README.md` همان پوشه نوشته شده است.
+## Agent task workflow
 
-## روند انجام تسک برای ایجنت
+The `workflow` component installs [`docs/TASK_WORKFLOW.md`](workflow/TASK_WORKFLOW.md) and an `AGENTS.md` that points to it. Every task, from a small fix to a full feature, follows the same order; a step that does not apply is skipped, not replaced.
 
-ایجنت هر تسک را با همین ترتیب جلو می‌برد. متن کامل در [`workflow/TASK_WORKFLOW.md`](workflow/TASK_WORKFLOW.md) است.
+1. Understand the request and check the product plan.
+2. Orient in the code with the knowledge graph before using grep.
+3. Implement with the project's design-system components and existing patterns.
+4. Test, and verify UI changes in a real browser.
+5. Provide seed data for every state: empty, one item, many items, each status, each role.
+6. Update the security release checklist.
+7. Apply the change to the running application.
+8. Update the knowledge graph.
+9. Report what changed, what was tested, and what was not.
 
-1. فهمیدن خواسته و نگاه به پلن محصول
-2. جهت‌یابی در کد با گراف دانش (graphify) قبل از grep
-3. پیاده‌سازی با کامپوننت‌های دیزاین سیستم
-4. تست، و دیدن تغییر در مرورگر
-5. دادهٔ نمونه برای همهٔ حالت‌ها: خالی، یک مورد، تعداد زیاد، هر وضعیت، هر نقش
-6. به‌روز کردن چک‌لیست امنیت
-7. اعمال تغییر روی برنامهٔ در حال اجرا
-8. به‌روز کردن گراف
-9. گزارش: چه چیزی عوض شد، چه چیزی تست شد، چه چیزی نشد
+## Spec-driven development and bug fixing
 
-## مشخصات فیچر و رفع باگ
+The `spec` component adds three small skills for work that is too large or too risky to start with code. They are intended for features that span more than one screen, data model or role, and for bugs; small changes go straight through the task workflow.
 
-بخش `spec` سه اسکیل کوچک اضافه می‌کند. برای فیچر بزرگ و باگ‌اند؛ تغییر کوچک مستقیم با روند بالا انجام می‌شود.
-
-| اسکیل | چه می‌کند | خروجی |
+| Skill | Purpose | Output |
 |---|---|---|
-| `feature-spec` | قبل از کد، «چه» و «چرا» را می‌نویسد و حداکثر پنج سؤال از کاربر می‌پرسد | `docs/specs/<slug>/spec.md` |
-| `feature-plan` | پلن فنی و تسک‌های مرتب؛ آخر کار کد را با مشخصات تطبیق می‌دهد | `docs/specs/<slug>/plan.md` |
-| `bug-fix` | تشخیص علت، رفع کوچک، و تأیید همان علامت اولیه با نتیجهٔ روشن | گزارش در گفت‌وگو |
+| [`feature-spec`](skills/spec/feature-spec/SKILL.md) | Captures what is being built and why, then asks the user at most five clarifying questions and records the answers | `docs/specs/<slug>/spec.md` |
+| [`feature-plan`](skills/spec/feature-plan/SKILL.md) | Produces the technical plan and an ordered task list tied to requirement IDs, then checks the finished code against the specification | `docs/specs/<slug>/plan.md` |
+| [`bug-fix`](skills/spec/bug-fix/SKILL.md) | Separates diagnosis, the smallest fix for the diagnosed cause, and re-verification of the original symptom, ending in a verdict: verified, partial or failed | A report in the conversation |
 
-## دیزاین سیستم برای توسعهٔ پنل
+Each feature produces two files. Tasks and the conformance table live inside `plan.md`, and a bug produces a file only on request or when it involves data, access control or money.
 
-دیزاین سیستم اختیاری است و فقط با `--design-system <id>` نصب می‌شود. فهرست کامل در [`design-systems/`](design-systems/) است و با هر پروژه بزرگ‌تر می‌شود.
+The approach is inspired by [GitHub Spec Kit](https://github.com/github/spec-kit); the skills were written for this kit and contain no text or files from it.
 
-| شناسه | نام | مناسب برای |
-|---|---|---|
-| [`dig`](design-systems/dig/) | دیگ (Dig) | توسعهٔ پنل: پنل مدیریت، داشبورد و پنل کاربری فارسی و راست‌به‌چپ (RTL) با React و Tailwind CSS 4 |
+## Agent skills
 
-دیگ بیشتر مناسب پنل است: فرم، جدول، سایدبار، دیالوگ و فیلدهای فارسی مثل تاریخ شمسی. برای لندینگ و صفحهٔ بازاریابی انتخاب اول نیست.
+Fifteen general-purpose Agent Skills are available individually through `--skills` or together through `--with skills`. The full table is in [`skills/README.md`](skills/README.md).
 
-## استک فنی: Django + Next.js + Docker
+| Area | Skills |
+|---|---|
+| Frontend and testing | `frontend-design`, `webapp-testing`, `web-artifacts-builder`, `theme-factory` |
+| Visual output | `canvas-design`, `algorithmic-art`, `brand-guidelines`, `slack-gif-creator` |
+| Writing | `doc-coauthoring`, `internal-comms` |
+| Building with Claude | `claude-api`, `mcp-builder`, `skill-creator` |
+| Assistant behaviour | `academy-guide`, `discernment-nudge` |
 
-فهرست کامل در [`stacks/`](stacks/) است.
+## Tech stack: Django + Next.js + Docker
 
-| شناسه | بک‌اند | فرانت‌اند | زیرساخت |
+Stacks are listed in [`stacks/`](stacks/).
+
+| ID | Backend | Frontend | Infrastructure |
 |---|---|---|---|
-| [`django-next-docker`](stacks/django-next-docker/) | Django 5، Django Ninja، Celery | Next.js 16، React 19، TypeScript، Tailwind CSS 4 | PostgreSQL، Redis، MinIO، Docker Compose |
+| [`django-next-docker`](stacks/django-next-docker/) | Django 5, Django Ninja, Celery | Next.js 16, React 19, TypeScript, Tailwind CSS 4 | PostgreSQL, Redis, MinIO, Docker Compose |
 
-این استک فقط اسکلت است: Dockerfileها، تنظیمات Django، یک مسیر `/health` و یک صفحهٔ خالی Next.js. مدل کاربر، ورود و منطق کسب‌وکار ندارد.
+The stack is a skeleton only: Dockerfiles, Django settings, a `/health` endpoint and an empty Next.js page. It contains no user model, authentication or business logic.
 
-## اضافه کردن اسکیل، دیزاین سیستم یا استک تازه
+## Design system registry
 
-| چه چیزی | کجا | راهنما |
+Design systems are optional and are installed only with `--design-system <id>`. The registry in [`design-systems/`](design-systems/) grows as new systems are used in projects.
+
+| ID | Name | Suited to |
 |---|---|---|
-| دیزاین سیستم | `design-systems/<id>/` | [design-systems/README.md](design-systems/README.md) |
-| استک فنی | `stacks/<id>/` | [stacks/README.md](stacks/README.md) |
-| اسکیل عمومی | `skills/agents/<name>/` | [skills/README.md](skills/README.md) |
-| قانون تازه در روند کار | `workflow/TASK_WORKFLOW.md` | — |
-| قالب داکیومنت | `docs-templates/` و یک خط `copy_file` در اسکریپت | — |
+| [`dig`](design-systems/dig/) | Dig | Panel development: Persian, right-to-left (RTL) admin panels, dashboards and user panels on React and Tailwind CSS 4 |
 
-## پیش‌نیاز
+Dig targets data-heavy, form-driven screens: forms, tables, sidebars, dialogs and Persian fields such as Jalali dates. It is not the first choice for landing or marketing pages.
 
-- [graphify](skills/claude/graphify/SKILL.md) روی سیستم نصب باشد؛ هوک‌ها و روند کار به آن تکیه دارند.
-- برای استک و دیزاین سیستم: Docker و Node 20.
-- macOS یا Linux با bash.
+## Safety guarantees
 
-## مجوز اسکیل‌ها
+- **No defaults.** With nothing selected, nothing is written and the target directory is not created.
+- **No overwrites.** A file that already exists is reported as `skip (exists)` and left as it is.
+- **No silent merges.** If `AGENTS.md` already exists, stack and design-system rules are not appended; the installer prints their path so they can be added by hand, and `CLAUDE.md` is not created next to it.
+- **Preview first.** `--dry-run` lists every file and `.gitignore` line before any write.
+- **Scoped substitution.** The project name replaces `__PROJECT__` only in files created during the current run.
+- **Idempotent.** Re-running the same command changes nothing.
 
-اسکیل‌ها با مجوز Apache 2.0 منتشر شده‌اند و هر کدام `LICENSE.txt` خودش را دارد؛ جزئیات در [skills/README.md](skills/README.md).
+## Extending the kit
+
+| To add | Location | Guide |
+|---|---|---|
+| A design system | `design-systems/<id>/` | [design-systems/README.md](design-systems/README.md) |
+| A tech stack | `stacks/<id>/` | [stacks/README.md](stacks/README.md) |
+| A general skill | `skills/agents/<name>/` | [skills/README.md](skills/README.md) |
+| A workflow rule | `workflow/TASK_WORKFLOW.md` | — |
+| A documentation template | `docs-templates/` plus one `copy_file` line in the installer | — |
+
+After changing `bin/new-project.sh`, `stacks/` or `design-systems/`, run the installer against a temporary directory and inspect the output.
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| [`bin/new-project.sh`](bin/new-project.sh) | The installer |
+| [`skills/`](skills/) | General skills (`agents/`), spec-driven skills (`spec/`), and the graphify skill for Claude Code (`claude/`) and Codex (`codex/`) |
+| [`workflow/`](workflow/) | Task workflow and the `AGENTS.md` template |
+| [`config/`](config/) | Claude Code settings, Codex hooks, `.gitattributes` and `.gitignore` lines |
+| [`docs-templates/`](docs-templates/) | Product plan, requirements and architecture, security checklist, README |
+| [`stacks/`](stacks/) | Tech stack boilerplates |
+| [`design-systems/`](design-systems/) | Design system registry |
+
+## Language of the installed content
+
+This documentation and the installer output are in English. The content written into your project by the `workflow`, `docs` and `spec` components (the task workflow, the `AGENTS.md` template, the documentation templates and the three spec-driven skills) is currently written in Persian, as are the stack and design-system agent rules. The 15 general skills and the graphify skill are in English.
+
+## Licensing
+
+The bundled general skills are published under Apache 2.0, each with its own `LICENSE.txt`; `doc-coauthoring` ships without a licence file. Skills whose licence does not permit redistribution (`docx`, `pdf`, `pptx`, `xlsx`) are deliberately not included. Details are in [skills/README.md](skills/README.md).

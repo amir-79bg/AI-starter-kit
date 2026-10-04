@@ -1,21 +1,21 @@
-# <نام دیزاین سیستم>
+# <Design system name>
 
-## چیست
+## What it is
 
-یک پاراگراف: برای چه نوع محصولی است و چه چیزی آن را از بقیه جدا می‌کند.
+One paragraph: what kind of product it is for and what sets it apart.
 
-## نصب
+## Installation
 
-فرمان‌هایی که بعد از `bin/new-project.sh` باید در پوشهٔ فرانت‌اند اجرا شوند.
+The commands to run in the frontend directory after `bin/new-project.sh`.
 
-## کامپوننت‌ها
+## Components
 
-فهرست کامپوننت‌هایی که دارد، یا لینک فهرست.
+The list of components it provides, or a link to the list.
 
-## برند و تم
+## Brand and theme
 
-رنگ، فونت و توکن‌ها کجا عوض می‌شوند.
+Where colours, fonts and tokens are changed.
 
-## منبع
+## Source
 
-از کدام پروژه آمده و مستنداتش کجاست.
+Which project it comes from and where its documentation lives.
