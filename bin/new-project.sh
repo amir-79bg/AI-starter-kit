@@ -10,7 +10,7 @@ Usage: bin/new-project.sh <target-dir> [--with <parts>] [--skills <ids>] [--stac
                           [--design-system <id>] [--name <slug>] [--dry-run]
        bin/new-project.sh --list
 
-  --with            comma-separated parts: skills, graphify, workflow, docs, or all
+  --with            comma-separated parts: skills, graphify, workflow, docs, spec, or all
   --skills          comma-separated skill ids from skills/agents (instead of all of them)
   --stack           one of stacks/
   --design-system   one of design-systems/
@@ -37,6 +37,7 @@ Parts (--with):
   graphify               graphify skill, Claude Code and Codex hooks, .gitattributes
   workflow               AGENTS.md, CLAUDE.md, docs/TASK_WORKFLOW.md, base .gitignore lines
   docs                   product plan, requirements, security checklist, README templates
+  spec                   feature-spec, feature-plan and bug-fix skills -> .agents/skills/, .claude/skills/
 PARTS
   echo "Skills (--skills):"
   for d in "$KIT/skills/agents"/*/; do echo "  $(basename "$d")"; done
@@ -63,8 +64,8 @@ done
 
 for p in $(echo "$WITH" | tr ',' ' '); do
   case "$p" in
-    all) WITH="skills,graphify,workflow,docs" ;;
-    skills|graphify|workflow|docs) ;;
+    all) WITH="skills,graphify,workflow,docs,spec" ;;
+    skills|graphify|workflow|docs|spec) ;;
     *) echo "Unknown part: $p" >&2; list_all >&2; exit 1 ;;
   esac
 done
@@ -189,6 +190,12 @@ if has_part docs; then
   copy_file "$KIT/docs-templates/REQUIREMENTS_ARCHITECTURE.md" "$TARGET/docs/REQUIREMENTS_ARCHITECTURE.md"
   copy_file "$KIT/docs-templates/SECURITY_RELEASE_CHECKLIST.md" "$TARGET/docs/SECURITY_RELEASE_CHECKLIST.md"
   copy_file "$KIT/docs-templates/README.md" "$TARGET/README.md"
+fi
+
+if has_part spec; then
+  echo "Spec"
+  copy_skills "$KIT/skills/spec" "$TARGET/.agents/skills"
+  copy_skills "$KIT/skills/spec" "$TARGET/.claude/skills"
 fi
 
 FRONTEND_DIR="."

@@ -10,6 +10,7 @@
 - [شروع سریع](#شروع-سریع)
 - [اگر ایجنت نصب می‌کند](#اگر-ایجنت-نصب-می‌کند)
 - [روند انجام تسک برای ایجنت](#روند-انجام-تسک-برای-ایجنت)
+- [مشخصات فیچر و رفع باگ](#مشخصات-فیچر-و-رفع-باگ)
 - [دیزاین سیستم برای توسعهٔ پنل](#دیزاین-سیستم-برای-توسعهٔ-پنل)
 - [استک فنی: Django + Next.js + Docker](#استک-فنی-django--nextjs--docker)
 - [اضافه کردن اسکیل، دیزاین سیستم یا استک تازه](#اضافه-کردن-اسکیل-دیزاین-سیستم-یا-استک-تازه)
@@ -48,7 +49,8 @@ bin/new-project.sh ../my-app --with all --stack django-next-docker
 | `--with graphify` | اسکیل graphify، هوک‌های Claude Code و Codex، `.gitattributes` |
 | `--with workflow` | `AGENTS.md`، `CLAUDE.md`، `docs/TASK_WORKFLOW.md` و خط‌های پایهٔ `.gitignore` |
 | `--with docs` | قالب پلن محصول، نیازمندی‌ها و معماری، چک‌لیست امنیت و README |
-| `--with all` | چهار بخش بالا؛ استک و دیزاین سیستم را شامل نمی‌شود |
+| `--with spec` | اسکیل‌های `feature-spec`، `feature-plan` و `bug-fix` در `.agents/skills/` و `.claude/skills/` |
+| `--with all` | پنج بخش بالا؛ استک و دیزاین سیستم را شامل نمی‌شود |
 | `--stack <id>` | اسکلت فنی |
 | `--design-system <id>` | دیزاین سیستم |
 | `--dry-run` | چیزی نمی‌نویسد؛ فقط فهرست فایل‌هایی که ساخته می‌شوند |
@@ -72,7 +74,7 @@ my-app/
 ├── AGENTS.md              workflow: روند کار + قانون‌های استک و دیزاین سیستم انتخاب‌شده
 ├── CLAUDE.md              workflow: به AGENTS.md اشاره می‌کند
 ├── .agents/skills/        skills: اسکیل‌های عمومی
-├── .claude/               graphify: اسکیل graphify و هوک‌های Claude Code
+├── .claude/               graphify: اسکیل graphify و هوک‌های Claude Code؛ spec: اسکیل‌های مشخصات و باگ
 ├── .codex/                graphify: اسکیل graphify و هوک‌های Codex
 ├── docs/                  workflow و docs: روند تسک، پلن محصول، نیازمندی‌ها و معماری، چک‌لیست امنیت
 └── ...                    فایل‌های استک و دیزاین سیستم، اگر انتخاب شده باشند
@@ -93,6 +95,16 @@ my-app/
 7. اعمال تغییر روی برنامهٔ در حال اجرا
 8. به‌روز کردن گراف
 9. گزارش: چه چیزی عوض شد، چه چیزی تست شد، چه چیزی نشد
+
+## مشخصات فیچر و رفع باگ
+
+بخش `spec` سه اسکیل کوچک اضافه می‌کند. برای فیچر بزرگ و باگ‌اند؛ تغییر کوچک مستقیم با روند بالا انجام می‌شود.
+
+| اسکیل | چه می‌کند | خروجی |
+|---|---|---|
+| `feature-spec` | قبل از کد، «چه» و «چرا» را می‌نویسد و حداکثر پنج سؤال از کاربر می‌پرسد | `docs/specs/<slug>/spec.md` |
+| `feature-plan` | پلن فنی و تسک‌های مرتب؛ آخر کار کد را با مشخصات تطبیق می‌دهد | `docs/specs/<slug>/plan.md` |
+| `bug-fix` | تشخیص علت، رفع کوچک، و تأیید همان علامت اولیه با نتیجهٔ روشن | گزارش در گفت‌وگو |
 
 ## دیزاین سیستم برای توسعهٔ پنل
 
@@ -120,7 +132,7 @@ my-app/
 |---|---|---|
 | دیزاین سیستم | `design-systems/<id>/` | [design-systems/README.md](design-systems/README.md) |
 | استک فنی | `stacks/<id>/` | [stacks/README.md](stacks/README.md) |
-| اسکیل | `skills/agents/<name>/` | [skills/README.md](skills/README.md) |
+| اسکیل عمومی | `skills/agents/<name>/` | [skills/README.md](skills/README.md) |
 | قانون تازه در روند کار | `workflow/TASK_WORKFLOW.md` | — |
 | قالب داکیومنت | `docs-templates/` و یک خط `copy_file` در اسکریپت | — |
 
