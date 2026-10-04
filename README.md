@@ -18,7 +18,7 @@
 
 | پوشه | چیست |
 |---|---|
-| [`skills/`](skills/) | ۱۹ اسکیل ایجنت (Agent Skills) برای طراحی رابط، تست اپ وب، ساخت فایل Word، PDF، Excel و PowerPoint، ساخت سرور MCP و کار با Claude API، به‌علاوهٔ اسکیل graphify برای گراف دانش کد |
+| [`skills/`](skills/) | ۱۵ اسکیل ایجنت (Agent Skills) برای طراحی رابط، تست اپ وب، ساخت آرتیفکت و تم، نوشتن مستندات، ساخت سرور MCP و کار با Claude API، به‌علاوهٔ اسکیل graphify برای گراف دانش کد |
 | [`workflow/`](workflow/) | روند انجام تسک در ۹ مرحله و قالب `AGENTS.md` |
 | [`config/`](config/) | تنظیمات و هوک‌های Claude Code (`.claude/settings.json`) و Codex (`.codex/hooks.json`) |
 | [`docs-templates/`](docs-templates/) | قالب پلن محصول، سند نیازمندی‌ها و معماری، چک‌لیست امنیت قبل از انتشار و README |
@@ -106,4 +106,4 @@ my-app/
 
 ## مجوز اسکیل‌ها
 
-هر اسکیل مجوز خودش را در `LICENSE.txt` همان پوشه دارد.
+اسکیل‌ها با مجوز Apache 2.0 منتشر شده‌اند و هر کدام `LICENSE.txt` خودش را دارد؛ جزئیات در [skills/README.md](skills/README.md).

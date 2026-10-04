@@ -20,7 +20,6 @@
 | `algorithmic-art` | هنر الگوریتمی با p5.js |
 | `brand-guidelines` | رنگ و تایپوگرافی برند Anthropic |
 | `slack-gif-creator` | GIF متحرک برای Slack |
-| `docx` · `pdf` · `pptx` · `xlsx` | ساخت و ویرایش فایل‌های Word، PDF، PowerPoint و Excel |
 | `doc-coauthoring` | روند نوشتن مستندات، پروپوزال و مشخصات فنی |
 | `internal-comms` | نوشتن ارتباطات داخلی سازمان |
 | `claude-api` | مرجع Claude API و SDK |
@@ -29,7 +28,11 @@
 | `academy-guide` | پیشنهاد دوره و آموزش از Claude Academy |
 | `discernment-nudge` | یادآوری بازبینی بعد از جوابی که کاربر ممکن است روی آن عمل کند |
 
-هر اسکیل مجوز خودش را در `LICENSE.txt` همان پوشه دارد.
+## مجوز
+
+اسکیل‌هایی که `LICENSE.txt` دارند با مجوز Apache 2.0 منتشر شده‌اند. `doc-coauthoring` فایل مجوز ندارد.
+
+اسکیل‌های `docx`، `pdf`، `pptx` و `xlsx` در این ریپو نیستند، چون مجوزشان اجازهٔ توزیع نمی‌دهد. این چهار اسکیل از داخل خود Claude در دسترس‌اند. قبل از اضافه کردن هر اسکیل تازه، مجوزش را بخوان.
 
 ## اضافه کردن اسکیل تازه
 
